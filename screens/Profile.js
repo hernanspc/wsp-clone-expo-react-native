@@ -12,7 +12,7 @@ import Constants from "expo-constants";
 import GlobalContext from "../context/Context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { pickImage, askForPermission, uploadImage } from "../utils";
-import { auth, db } from "../firebase";
+import { auth, db } from "../database/firebase";
 import { updateProfile } from "@firebase/auth";
 import { doc, setDoc } from "@firebase/firestore";
 import { useNavigation } from "@react-navigation/native";

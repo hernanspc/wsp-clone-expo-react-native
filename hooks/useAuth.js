@@ -13,7 +13,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "@firebase/auth";
-import { auth, db, updateProfile } from "../exportDatabase/firebase";
+import { auth, db, updateProfile } from "../database/firebase";
 import { serverTimestamp, setDoc, doc } from "firebase/firestore";
 
 const AuthContext = createContext({});
@@ -53,10 +53,10 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log("logeado");
+        console.log("success logeado");
         const user = userCredential.user;
-        console.log("log => displayName : ", user);
-        console.log("log => displayName : ", user.displayName);
+        console.log("log : ", user);
+        console.log("usuario loggeado displayName : ", user.displayName);
       })
       .catch((error) => setError(error))
       .finally(() => {

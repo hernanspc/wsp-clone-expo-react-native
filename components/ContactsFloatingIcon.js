@@ -10,13 +10,7 @@ export default function ContactsFloatingIcon() {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("contacts", {
-          username: "sasasa",
-          picture:
-            "https://static.wikia.nocookie.net/shrek/images/3/3f/Portada_img.jpg/revision/latest/scale-to-width-down/1200?cb=20100719002911&path-prefix=es",
-        })
-      }
+      onPress={() => navigation.navigate("contacts")}
       style={{
         position: "absolute",
         right: 20,

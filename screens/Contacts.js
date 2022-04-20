@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import ListItem from "../components/ListItem";
 import GlobalContext from "../context/Context";
-import { db } from "../firebase";
+import { db } from "../database/firebase";
 import useContacts from "../hooks/useHooks";
 
 export default function Contacts() {
@@ -17,9 +17,7 @@ export default function Contacts() {
       style={{ flex: 1, padding: 10 }}
       data={contacts}
       keyExtractor={(_, i) => i}
-      renderItem={({ item }) => (
-        <ContactPreview contact={item} image={picture} />
-      )}
+      renderItem={({ item }) => <ContactPreview contact={item} image={null} />}
     />
   );
 }

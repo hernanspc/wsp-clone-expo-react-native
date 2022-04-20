@@ -11,7 +11,8 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { auth, db } from "../firebase";
+import { auth, db } from "../database/firebase";
+import useAuth from "../hooks/useAuth";
 import GlobalContext from "../context/Context";
 import {
   addDoc,
@@ -33,6 +34,7 @@ import ImageView from "react-native-image-viewing";
 const randomId = nanoid();
 
 export default function Chat() {
+  const { user } = useAuth();
   const [roomHash, setRoomHash] = useState("");
   const [messages, setMessages] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -40,19 +42,19 @@ export default function Chat() {
   const {
     theme: { colors },
   } = useContext(GlobalContext);
-  const { currentUser } = auth;
+  // const { currentUser } = auth;
   const route = useRoute();
   const room = route.params.room;
   const selectedImage = route.params.image;
   const userB = route.params.user;
 
-  const senderUser = currentUser.photoURL
+  const senderUser = user.photoURL
     ? {
-        name: currentUser.displayName,
-        _id: currentUser.uid,
-        avatar: currentUser.photoURL,
+        name: user.displayName,
+        _id: user.uid,
+        avatar: user.photoURL,
       }
-    : { name: currentUser.displayName, _id: currentUser.uid };
+    : { name: user.displayName, _id: user.uid };
 
   const roomId = room ? room.id : randomId;
 
@@ -62,12 +64,12 @@ export default function Chat() {
   useEffect(() => {
     (async () => {
       if (!room) {
-        const currUserData = {
-          displayName: currentUser.displayName,
-          email: currentUser.email,
+        const user = {
+          displayName: user.displayName,
+          email: user.email,
         };
-        if (currentUser.photoURL) {
-          currUserData.photoURL = currentUser.photoURL;
+        if (user.photoURL) {
+          user.photoURL = user.photoURL;
         }
         const userBData = {
           displayName: userB.contactName || userB.displayName || "",
@@ -77,8 +79,8 @@ export default function Chat() {
           userBData.photoURL = userB.photoURL;
         }
         const roomData = {
-          participants: [currUserData, userBData],
-          participantsArray: [currentUser.email, userB.email],
+          participants: [user, userBData],
+          participantsArray: [user.email, userB.email],
         };
         try {
           await setDoc(roomRef, roomData);
@@ -86,7 +88,7 @@ export default function Chat() {
           console.log(error);
         }
       }
-      const emailHash = `${currentUser.email}:${userB.email}`;
+      const emailHash = `${user.email}:${userB.email}`;
       setRoomHash(emailHash);
       if (selectedImage && selectedImage.uri) {
         await sendImage(selectedImage.uri, emailHash);

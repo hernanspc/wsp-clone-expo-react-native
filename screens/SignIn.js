@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Image, TextInput, Button } from "react-native";
+import { View, Text, Image, TextInput, Button, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Context from "../context/Context";
-import { signIn, signUp } from "../firebase";
+import useAuth from "../hooks/useAuth";
+// import { signIn, signUp } from "../firebase";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,12 +12,27 @@ export default function SignIn() {
     theme: { colors },
   } = useContext(Context);
 
+  const { signInWithFirebase } = useAuth();
+
+  const handleSignIn = (userName, password) => {
+    if (userName.length == 0 || password.length == 0) {
+      Alert.alert(
+        "¡Entrada incorrecta! ",
+        " El campo de nombre de usuario o contraseña no puede estar vacío.",
+        [{ text: "Ok" }]
+      );
+      return;
+    }
+    signInWithFirebase(userName, password);
+  };
+
   async function handlePress() {
     if (mode === "signUp") {
-      await signUp(email, password);
+      // await signUp(email, password);
+      console.log("estamos trabajando.. regrese otro dia");
     }
     if (mode === "signIn") {
-      await signIn(email, password);
+      await handleSignIn(email, password);
     }
   }
   return (
