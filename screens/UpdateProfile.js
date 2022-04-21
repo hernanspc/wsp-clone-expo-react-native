@@ -6,6 +6,8 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
@@ -14,30 +16,40 @@ const UpdateProfile = () => {
   const [userData, setuserData] = useState(null);
 
   return (
-    <View style={styles.panel}>
-      <Image
-        style={styles.userImg}
-        source={{
-          uri: userData
-            ? userData.userImg ||
-              "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-            : "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{
+          justifyContent: "center",
+          alignItems: "center",
         }}
-      />
-
-      <TouchableOpacity
-        style={styles.panelButton}
-        onPress={() => console.log("elejir")}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.panelButtonTitle}>Elejir de tu libreria</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.panelButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.panelButtonTitle}>Cancelar</Text>
-      </TouchableOpacity>
-    </View>
+        <Image
+          style={styles.userImg}
+          source={{
+            uri: userData
+              ? userData.userImg ||
+                "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+              : "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+          }}
+        />
+        <View style={styles.panel}>
+          <TouchableOpacity
+            style={styles.panelButton}
+            onPress={() => console.log("elejir")}
+          >
+            <Text style={styles.panelButtonTitle}>Elejir de tu libreria</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.panelButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.panelButtonTitle}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

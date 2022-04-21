@@ -1,29 +1,76 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+
+import { onAuthStateChanged } from "firebase/auth";
 import { useNavigation } from "@react-navigation/core";
+
+import { auth, logout } from "./../firebase";
 
 const ProfileInfo = () => {
   const navigation = useNavigation();
 
+  const [currUser, setCurrUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // const {
+  //   theme: { colors },
+  // } = useContext(Context);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setLoading(false);
+      if (user) {
+        setCurrUser(user);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+  console.log("currUser ", currUser?.photoURL);
+
   return (
-    <View style={styles.panel}>
-      <Image
-        style={styles.userImg}
-        source={{
-          uri: "https://www.draquio.com/wp-content/uploads/2020/08/las-voces-de-shrek.jpg",
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{
+          // justifyContent: "center",
+          alignItems: "center",
         }}
-      />
-      <View style={styles.containerButton}>
-        <TouchableOpacity
-          style={styles.userBtn}
-          onPress={() => {
-            navigation.navigate("UpdateProfile");
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={{}}>
+          {currUser?.email ? currUser?.email : "Cargando..."}
+        </Text>
+        <Image
+          style={styles.userImg}
+          source={{
+            uri: "https://www.draquio.com/wp-content/uploads/2020/08/las-voces-de-shrek.jpg",
           }}
-        >
-          <Text style={styles.userBtnTxt}>Edit</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        />
+        <View style={styles.panel}>
+          <View style={styles.containerButton}>
+            <TouchableOpacity
+              style={styles.userBtn}
+              onPress={() => {
+                navigation.navigate("UpdateProfile");
+              }}
+            >
+              <Text style={styles.userBtnTxt}>Edit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
