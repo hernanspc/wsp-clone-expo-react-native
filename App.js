@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, LogBox, Button } from "react-native";
+import { Text, View, LogBox, Button, Alert } from "react-native";
 import { useAssets } from "expo-asset";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, logout } from "./firebase";
@@ -11,12 +11,15 @@ import ContextWrapper from "./context/ContextWrapper";
 import Context from "./context/Context";
 import Profile from "./screens/Profile";
 import Chats from "./screens/Chats";
-import Photo from "./screens/Photo";
+import ProfileInfo from "./screens/ProfileInfo";
+import UpdateProfile, { updateT } from "./screens/UpdateProfile";
 import { Ionicons } from "@expo/vector-icons";
 import Contacts from "./screens/Contacts";
 import Chat from "./screens/Chat";
 import ChatHeader from "./components/ChatHeader";
 import { StatusBar } from "expo-status-bar";
+
+// import { useNavigation } from "@react-navigation/core";
 
 LogBox.ignoreLogs([
   "Setting a timer",
@@ -27,6 +30,8 @@ const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
+  // const navigation = useNavigation();
+
   const [currUser, setCurrUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const {
@@ -48,8 +53,20 @@ function App() {
   }
 
   const outApp = () => {
-    logout();
-    setCurrUser(null);
+    Alert.alert("Alerta", "Realmente, desea salir de la Aplicación?", [
+      {
+        text: "Cancelar",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          logout();
+          setCurrUser(null);
+        },
+      },
+    ]);
   };
 
   return (
@@ -90,19 +107,18 @@ function App() {
                   onPress={outApp}
                 />
               ),
-              headerLeft: () => (
-                <Ionicons
-                  name="ios-person-circle-outline"
-                  size={29}
-                  color={colors.white}
-                  style={{ paddingLeft: 10 }}
-                  onPress={() => {
-                    console.log("press");
-                  }}
-                />
-              ),
+              // headerLeft: () => (
+              //   <Ionicons
+              //     name="ios-person-circle-outline"
+              //     size={29}
+              //     color={colors.white}
+              //     style={{ paddingLeft: 10 }}
+              //     onPress={goToUpdate}
+              //   />
+              // ),
             }}
-            component={Chats}
+            // component={Chats}
+            component={Home}
           />
           <Stack.Screen
             name="contacts"
@@ -114,49 +130,66 @@ function App() {
             component={Chat}
             options={{ headerTitle: (props) => <ChatHeader {...props} /> }}
           />
+          <Stack.Screen
+            name="ProfileInfo"
+            component={ProfileInfo}
+            options={{ title: "Informacion de perfil" }}
+          />
+          <Stack.Screen
+            name="UpdateProfile"
+            component={UpdateProfile}
+            options={{ title: "Configuración de perfil" }}
+          />
         </Stack.Navigator>
       )}
     </NavigationContainer>
   );
 }
-// function Home() {
-//   const {
-//     theme: { colors },
-//   } = useContext(Context);
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => {
-//         return {
-//           tabBarLabel: () => {
-//             if (route.name === "photo") {
-//               return <Ionicons name="camera" size={20} color={colors.white} />;
-//             } else {
-//               return (
-//                 <Text style={{ color: colors.white }}>
-//                   {route.name.toLocaleUpperCase()}
-//                 </Text>
-//               );
-//             }
-//           },
-//           tabBarShowIcon: true,
-//           tabBarLabelStyle: {
-//             color: colors.white,
-//           },
-//           tabBarIndicatorStyle: {
-//             backgroundColor: colors.white,
-//           },
-//           tabBarStyle: {
-//             backgroundColor: colors.foreground,
-//           },
-//         };
-//       }}
-//       initialRouteName="chats"
-//     >
-//       <Tab.Screen name="photo" component={Photo} />
-//       <Tab.Screen name="chats" component={Chats} />
-//     </Tab.Navigator>
-//   );
-// }
+function Home() {
+  const {
+    theme: { colors },
+  } = useContext(Context);
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => {
+        return {
+          tabBarLabel: () => {
+            if (route.name === "photo") {
+              return (
+                <Ionicons
+                  // name="person"
+                  name="ios-person-circle-outline"
+                  size={30}
+                  color={colors.white}
+                />
+              );
+            } else {
+              return (
+                <Text style={{ color: colors.white }}>
+                  {route.name.toLocaleUpperCase()}
+                </Text>
+              );
+            }
+          },
+          tabBarShowIcon: true,
+          tabBarLabelStyle: {
+            color: colors.white,
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: colors.white,
+          },
+          tabBarStyle: {
+            backgroundColor: colors.foreground,
+          },
+        };
+      }}
+      initialRouteName="chats"
+    >
+      <Tab.Screen name="photo" component={ProfileInfo} />
+      <Tab.Screen name="chats" component={Chats} />
+    </Tab.Navigator>
+  );
+}
 
 function Main() {
   const [assets] = useAssets(

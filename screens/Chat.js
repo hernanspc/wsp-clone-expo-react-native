@@ -132,7 +132,6 @@ export default function Chat() {
       uri,
       `images/rooms/${roomHash}`
     );
-    console.log("pan: ", url, fileName);
     const message = {
       _id: fileName,
       text: "",
