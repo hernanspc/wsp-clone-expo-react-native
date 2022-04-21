@@ -195,8 +195,6 @@ export default function Chat() {
             onPressActionButton={handlePhotoPicker}
             icon={() => (
               <Ionicons
-                // name="md-camera-outline"
-                // name="md-camera"
                 name="ios-camera-sharp"
                 size={29}
                 color={colors.iconGray}

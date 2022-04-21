@@ -32,7 +32,6 @@ function App() {
   const {
     theme: { colors },
   } = useContext(Context);
-  // console.log("/App/ ", currUser);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -77,12 +76,30 @@ function App() {
               options={{ headerShown: false }}
             />
           )}
+
           <Stack.Screen
             name="home"
             options={{
               headerTitle: "Whatsapp",
               headerRight: () => (
-                <Button onPress={outApp} title="Salir" color="#fff" />
+                <Ionicons
+                  name="log-out-outline"
+                  size={29}
+                  color={colors.white}
+                  style={{ paddingRight: 10 }}
+                  onPress={outApp}
+                />
+              ),
+              headerLeft: () => (
+                <Ionicons
+                  name="ios-person-circle-outline"
+                  size={29}
+                  color={colors.white}
+                  style={{ paddingLeft: 10 }}
+                  onPress={() => {
+                    console.log("press");
+                  }}
+                />
               ),
             }}
             component={Chats}
