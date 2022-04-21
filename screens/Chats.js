@@ -1,8 +1,8 @@
 import { collection, onSnapshot, query, where } from "@firebase/firestore";
 import React, { useContext, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button, Alert } from "react-native";
 import GlobalContext from "../context/Context";
-import { auth, db } from "../firebase";
+import { auth, db, logout } from "../firebase";
 import ContactsFloatingIcon from "../components/ContactsFloatingIcon";
 import ListItem from "../components/ListItem";
 import useContacts from "../hooks/useHooks";
@@ -12,7 +12,7 @@ export default function Chats() {
   const contacts = useContacts();
   const chatsQuery = query(
     collection(db, "rooms"),
-    where("participantsArray", "array-contains", currentUser.email)
+    where("participantsArray", "array-contains", currentUser?.email)
   );
   useEffect(() => {
     const unsubscribe = onSnapshot(chatsQuery, (querySnapshot) => {
@@ -21,7 +21,7 @@ export default function Chats() {
         id: doc.id,
         userB: doc
           .data()
-          .participants.find((p) => p.email !== currentUser.email),
+          .participants.find((p) => p.email !== currentUser?.email),
       }));
       setUnfilteredRooms(parsedChats);
       setRooms(parsedChats.filter((doc) => doc.lastMessage));
@@ -36,7 +36,20 @@ export default function Chats() {
     }
     return user;
   }
-  console.log("rooms ", rooms);
+
+  const handleOut = () => {
+    // console.log("press handleOut");
+
+    // Alert.alert("Alerta", "Realmente, desea salir de la Aplicación?", [
+    //   {
+    //     text: "Cancelar",
+    //     onPress: () => console.log("Cancel Pressed"),
+    //     style: "cancel",
+    //   },
+    //   { text: "OK", onPress: logout() },
+    // ]);
+    logout();
+  };
   return (
     <View style={{ flex: 1, padding: 5, paddingRight: 10 }}>
       {rooms.map((room) => (
@@ -50,6 +63,7 @@ export default function Chats() {
         />
       ))}
       <ContactsFloatingIcon />
+      {/* <Button onPress={() => logout()} title="Salir" /> */}
     </View>
   );
 }

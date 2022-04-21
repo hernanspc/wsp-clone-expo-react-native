@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, LogBox } from "react-native";
+import { Text, View, LogBox, Button } from "react-native";
 import { useAssets } from "expo-asset";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, logout } from "./firebase";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -30,6 +30,7 @@ function App() {
   const {
     theme: { colors },
   } = useContext(Context);
+  // console.log("/App/ ", currUser);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -44,6 +45,13 @@ function App() {
   if (loading) {
     return <Text>Loading...</Text>;
   }
+
+  const outApp = () => {
+    console.log("antes: ", currUser?.email);
+    setCurrUser(null);
+    logout();
+    console.log("luego: ", currUser?.email);
+  };
 
   return (
     <NavigationContainer>
@@ -62,7 +70,7 @@ function App() {
             headerTintColor: colors.white,
           }}
         >
-          {!currUser.displayName && (
+          {!currUser?.displayName && (
             <Stack.Screen
               name="profile"
               component={Profile}
@@ -71,8 +79,13 @@ function App() {
           )}
           <Stack.Screen
             name="home"
-            options={{ title: "Whatsapp" }}
-            component={Home}
+            options={{
+              headerTitle: "Whatsapp",
+              headerRight: () => (
+                <Button onPress={outApp} title="Salir" color="#fff" />
+              ),
+            }}
+            component={Chats}
           />
           <Stack.Screen
             name="contacts"

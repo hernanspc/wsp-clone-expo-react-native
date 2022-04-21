@@ -11,7 +11,7 @@ export default function Contacts() {
   const contacts = useContacts();
   const route = useRoute();
   const image = route.params && route.params.image;
-
+  let picture = "";
   return (
     <FlatList
       style={{ flex: 1, padding: 10 }}

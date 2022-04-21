@@ -3,6 +3,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { initializeFirestore } from "firebase/firestore";
@@ -27,4 +28,8 @@ export function signIn(email, password) {
 }
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
+}
+
+export function logout() {
+  return signOut(auth);
 }
