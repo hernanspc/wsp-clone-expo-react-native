@@ -49,10 +49,8 @@ function App() {
   }
 
   const outApp = () => {
-    console.log("antes: ", currUser?.email);
-    setCurrUser(null);
     logout();
-    console.log("luego: ", currUser?.email);
+    setCurrUser(null);
   };
 
   return (

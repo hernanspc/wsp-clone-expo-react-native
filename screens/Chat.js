@@ -11,7 +11,7 @@ import {
   Image,
   Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { auth, db } from "../firebase";
 import GlobalContext from "../context/Context";
 import {
@@ -31,8 +31,6 @@ import {
 import { pickImage, uploadImage } from "../utils";
 import ImageView from "react-native-image-viewing";
 import * as ImagePicker from "expo-image-picker";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase";
 
 const randomId = nanoid();
 
@@ -129,30 +127,9 @@ export default function Chat() {
     await Promise.all(writes);
   }
 
-  const uploadProfile = async (uri) => {
-    console.log("uploadProfile ", uri);
-
-    const storageRef = ref(storage, "profiles/" + `wuebada.jpg`);
-    //convert image to array of bytes
-    const img = await fetch(uri);
-    const bytes = await img.blob();
-
-    const res = await uploadBytes(storageRef, bytes);
-    return res;
-  };
-
   async function sendImage(uri, roomPath) {
-    // await uploadProfile(uri)
-    //   .then((snapshot) => {
-    //     console.log("imagen Subida Correctamente");
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error al actualizar image ", error.message);
-    //   });
-
     const { url, fileName } = await uploadImage(
       uri,
-      // `images/rooms/${roomPath || roomHash}`
       `images/rooms/${roomHash}`
     );
     console.log("pan: ", url, fileName);
@@ -171,7 +148,6 @@ export default function Chat() {
   }
 
   async function handlePhotoPicker() {
-    console.log("click");
     const resultPermissions = await pickImage();
     if (resultPermissions.status !== "denied") {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -218,7 +194,13 @@ export default function Chat() {
             }}
             onPressActionButton={handlePhotoPicker}
             icon={() => (
-              <Ionicons name="camera" size={30} color={colors.iconGray} />
+              <Ionicons
+                // name="md-camera-outline"
+                // name="md-camera"
+                name="ios-camera-sharp"
+                size={29}
+                color={colors.iconGray}
+              />
             )}
           />
         )}

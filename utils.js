@@ -4,36 +4,28 @@ import { nanoid } from "nanoid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
 export async function pickImage() {
-  // let result = ImagePicker.launchCameraAsync();
   let permissionResult =
     await ImagePicker.requestMediaLibraryPermissionsAsync();
 
   return permissionResult;
 }
 export async function askForPermission() {
-  const { status } = await // ImagePicker.requestCameraPermissionsAsync();
-  ImagePicker.requestMediaLibraryPermissionsAsync();
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   return status;
 }
 
 export async function uploadImage(uri, path, fName) {
-  console.log("function ", uri, path);
-
   const fileName = nanoid();
 
   const img = await fetch(uri);
   const bytesBlob = await img.blob();
-  console.log("bytesBlob ", JSON.stringify(bytesBlob));
 
   const imageRef = ref(storage, `${path}/${fileName}.jpeg`);
 
-  // const snapshot = await uploadBytes(imageRef, bytesBlob, {
-  //   contentType: "image/jpeg",
-  // });
-  const snapshot = await uploadBytes(imageRef, bytesBlob);
-  // console.log("snapshot ", snapshot);
+  const snapshot = await uploadBytes(imageRef, bytesBlob, {
+    contentType: "image/jpeg",
+  });
 
-  //obtener url
   const url = await getDownloadURL(snapshot.ref);
 
   return { url, fileName };
@@ -42,8 +34,8 @@ export async function uploadImage(uri, path, fName) {
 const palette = {
   // tealGreen: "#128c7e",
   tealGreen: "#047AFC",
-  // tealGreenDark: "#075e54",
-  tealGreenDark: "#1A73E3",
+  tealGreenDark: "#075e54",
+  // tealGreenDark: "#1A73E3",
   green: "#25d366",
   lime: "#dcf8c6",
   skyblue: "#34b7f1",
