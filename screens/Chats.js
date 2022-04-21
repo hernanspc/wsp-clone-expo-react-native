@@ -37,19 +37,6 @@ export default function Chats() {
     return user;
   }
 
-  const handleOut = () => {
-    // console.log("press handleOut");
-
-    // Alert.alert("Alerta", "Realmente, desea salir de la Aplicación?", [
-    //   {
-    //     text: "Cancelar",
-    //     onPress: () => console.log("Cancel Pressed"),
-    //     style: "cancel",
-    //   },
-    //   { text: "OK", onPress: logout() },
-    // ]);
-    logout();
-  };
   return (
     <View style={{ flex: 1, padding: 5, paddingRight: 10 }}>
       {rooms.map((room) => (
@@ -63,7 +50,6 @@ export default function Chats() {
         />
       ))}
       <ContactsFloatingIcon />
-      {/* <Button onPress={() => logout()} title="Salir" /> */}
     </View>
   );
 }

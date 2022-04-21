@@ -9,6 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { auth, db } from "../firebase";
@@ -29,6 +30,9 @@ import {
 } from "react-native-gifted-chat";
 import { pickImage, uploadImage } from "../utils";
 import ImageView from "react-native-image-viewing";
+import * as ImagePicker from "expo-image-picker";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase";
 
 const randomId = nanoid();
 
@@ -125,11 +129,33 @@ export default function Chat() {
     await Promise.all(writes);
   }
 
+  const uploadProfile = async (uri) => {
+    console.log("uploadProfile ", uri);
+
+    const storageRef = ref(storage, "profiles/" + `wuebada.jpg`);
+    //convert image to array of bytes
+    const img = await fetch(uri);
+    const bytes = await img.blob();
+
+    const res = await uploadBytes(storageRef, bytes);
+    return res;
+  };
+
   async function sendImage(uri, roomPath) {
+    // await uploadProfile(uri)
+    //   .then((snapshot) => {
+    //     console.log("imagen Subida Correctamente");
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error al actualizar image ", error.message);
+    //   });
+
     const { url, fileName } = await uploadImage(
       uri,
-      `images/rooms/${roomPath || roomHash}`
+      // `images/rooms/${roomPath || roomHash}`
+      `images/rooms/${roomHash}`
     );
+    console.log("pan: ", url, fileName);
     const message = {
       _id: fileName,
       text: "",
@@ -145,9 +171,28 @@ export default function Chat() {
   }
 
   async function handlePhotoPicker() {
-    const result = await pickImage();
-    if (!result.cancelled) {
+    console.log("click");
+    const resultPermissions = await pickImage();
+    if (resultPermissions.status !== "denied") {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (result.cancelled) {
+        Alert.alert("Alerta!", " Has cerrado la selección de imagenes", [
+          { text: "Ok" },
+        ]);
+      }
       await sendImage(result.uri);
+    } else {
+      Alert.alert(
+        "Alerta!",
+        " Es necesario aceptar los permisos de la galeria",
+        [{ text: "Ok" }]
+      );
     }
   }
 

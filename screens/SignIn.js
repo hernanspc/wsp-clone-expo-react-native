@@ -63,7 +63,7 @@ export default function SignIn() {
         />
         <View style={{ marginTop: 20 }}>
           <Button
-            title={mode === "signUp" ? "Sign Up" : "Sign in"}
+            title={mode === "signUp" ? "Inscribirse" : "Iniciar sesión"}
             disabled={!password || !email}
             color={colors.secondary}
             onPress={handlePress}

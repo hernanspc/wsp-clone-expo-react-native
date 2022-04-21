@@ -16,6 +16,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Contacts from "./screens/Contacts";
 import Chat from "./screens/Chat";
 import ChatHeader from "./components/ChatHeader";
+import { StatusBar } from "expo-status-bar";
+
 LogBox.ignoreLogs([
   "Setting a timer",
   "AsyncStorage has been extracted from react-native core and will be removed in a future release.",
@@ -102,44 +104,44 @@ function App() {
     </NavigationContainer>
   );
 }
-function Home() {
-  const {
-    theme: { colors },
-  } = useContext(Context);
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => {
-        return {
-          tabBarLabel: () => {
-            if (route.name === "photo") {
-              return <Ionicons name="camera" size={20} color={colors.white} />;
-            } else {
-              return (
-                <Text style={{ color: colors.white }}>
-                  {route.name.toLocaleUpperCase()}
-                </Text>
-              );
-            }
-          },
-          tabBarShowIcon: true,
-          tabBarLabelStyle: {
-            color: colors.white,
-          },
-          tabBarIndicatorStyle: {
-            backgroundColor: colors.white,
-          },
-          tabBarStyle: {
-            backgroundColor: colors.foreground,
-          },
-        };
-      }}
-      initialRouteName="chats"
-    >
-      <Tab.Screen name="photo" component={Photo} />
-      <Tab.Screen name="chats" component={Chats} />
-    </Tab.Navigator>
-  );
-}
+// function Home() {
+//   const {
+//     theme: { colors },
+//   } = useContext(Context);
+//   return (
+//     <Tab.Navigator
+//       screenOptions={({ route }) => {
+//         return {
+//           tabBarLabel: () => {
+//             if (route.name === "photo") {
+//               return <Ionicons name="camera" size={20} color={colors.white} />;
+//             } else {
+//               return (
+//                 <Text style={{ color: colors.white }}>
+//                   {route.name.toLocaleUpperCase()}
+//                 </Text>
+//               );
+//             }
+//           },
+//           tabBarShowIcon: true,
+//           tabBarLabelStyle: {
+//             color: colors.white,
+//           },
+//           tabBarIndicatorStyle: {
+//             backgroundColor: colors.white,
+//           },
+//           tabBarStyle: {
+//             backgroundColor: colors.foreground,
+//           },
+//         };
+//       }}
+//       initialRouteName="chats"
+//     >
+//       <Tab.Screen name="photo" component={Photo} />
+//       <Tab.Screen name="chats" component={Chats} />
+//     </Tab.Navigator>
+//   );
+// }
 
 function Main() {
   const [assets] = useAssets(
@@ -153,6 +155,7 @@ function Main() {
   }
   return (
     <ContextWrapper>
+      <StatusBar style="light" />
       <App />
     </ContextWrapper>
   );
