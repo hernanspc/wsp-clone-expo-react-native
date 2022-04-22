@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { Avatar, Text, Button } from "react-native-elements";
+import { Avatar, Text, Button, ListItem, Icon } from "react-native-elements";
 
 import * as ImagePicker from "expo-image-picker";
 
@@ -27,6 +27,8 @@ import {
   serverTimestamp,
 } from "@firebase/firestore";
 import { auth, logout, updateProfile, db } from "./../firebase";
+import { Modal } from "../components/Shared/Modal/Modal";
+import { ChangePasswordForm } from "../components/Account/ChangePasswordForm/ChangePassword";
 
 const ProfileInfo = () => {
   const navigation = useNavigation();
@@ -98,12 +100,57 @@ const ProfileInfo = () => {
     }
   }
 
-  // if (loading) {
-  //   return <Text>Loading...</Text>;
-  // }
+  function AccountOptions(props) {
+    const { onReload } = props;
+
+    const [showModal, setShowModal] = useState(false);
+    const [renderComponent, setRenderComponent] = useState(null);
+
+    const onCloseOpenModal = () => setShowModal((prevState) => !prevState);
+
+    const selectedComponent = (key) => {
+      if (key === "password") {
+        setRenderComponent(<ChangePasswordForm onClose={onCloseOpenModal} />);
+      }
+      onCloseOpenModal();
+    };
+
+    return (
+      <View>
+        <ListItem bottomDivider onPress={() => selectedComponent("password")}>
+          <Icon
+            type={"material-community"}
+            name={"lock-reset"}
+            color={"#ccc"}
+          />
+          <ListItem.Content>
+            <ListItem.Title>{"Cambiar contraseña"}</ListItem.Title>
+          </ListItem.Content>
+          <Icon
+            type={"material-community"}
+            name={"chevron-right"}
+            color={"#ccc"}
+          />
+        </ListItem>
+
+        <Modal show={showModal} close={onCloseOpenModal}>
+          {renderComponent}
+        </Modal>
+      </View>
+    );
+  }
+
+  const [_, setReload] = useState(false);
+
+  const onReload = () => setReload((prevState) => !prevState);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        // backgroundColor: "#fff"
+      }}
+    >
       {/* Informacion de perfil */}
       <View style={styles.content}>
         <Avatar
@@ -125,6 +172,7 @@ const ProfileInfo = () => {
         </View>
       </View>
       {/* Acount Options */}
+      <AccountOptions onReload={onReload} />
 
       {/* Button options */}
       <Button
@@ -170,36 +218,4 @@ const styles = StyleSheet.create({
     color: "#00a680",
   },
   //other
-  panel: {
-    padding: 20,
-    backgroundColor: "#FFFFFF",
-    paddingTop: 20,
-    width: "100%",
-    height: "100%",
-  },
-  userImg: {
-    height: 200,
-    width: 200,
-    borderRadius: 100,
-  },
-  userBtn: {
-    borderColor: "#128c7e",
-    borderWidth: 2,
-    borderRadius: 3,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginHorizontal: 5,
-  },
-  panelButtonTitle: {
-    fontSize: 17,
-    fontWeight: "bold",
-    color: "white",
-  },
-  panelButton: {
-    padding: 13,
-    borderRadius: 10,
-    backgroundColor: "#128c7e",
-    alignItems: "center",
-    marginVertical: 7,
-  },
 });
