@@ -19,9 +19,6 @@ const ProfileInfo = () => {
 
   const [currUser, setCurrUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const {
-  //   theme: { colors },
-  // } = useContext(Context);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -36,7 +33,7 @@ const ProfileInfo = () => {
   if (loading) {
     return <Text>Loading...</Text>;
   }
-  console.log("currUser ", currUser?.photoURL);
+  console.log("currUser: ", currUser?.photoURL);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -60,12 +57,14 @@ const ProfileInfo = () => {
         <View style={styles.panel}>
           <View style={styles.containerButton}>
             <TouchableOpacity
-              style={styles.userBtn}
+              style={styles.panelButton}
               onPress={() => {
-                navigation.navigate("UpdateProfile");
+                navigation.navigate("UpdateProfile", {
+                  currUser,
+                });
               }}
             >
-              <Text style={styles.userBtnTxt}>Edit</Text>
+              <Text style={styles.panelButtonTitle}>Editar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -97,10 +96,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginHorizontal: 5,
   },
-  userBtnTxt: {
-    color: "#128c7e",
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "white",
   },
-  //   containerButton: {
-  //     padding: 20,
-  //   },
+  panelButton: {
+    padding: 13,
+    borderRadius: 10,
+    backgroundColor: "#128c7e",
+    alignItems: "center",
+    marginVertical: 7,
+  },
 });

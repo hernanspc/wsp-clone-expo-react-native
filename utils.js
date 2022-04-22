@@ -31,6 +31,22 @@ export async function uploadImage(uri, path, fName) {
   return { url, fileName };
 }
 
+export async function uploadImageWithName(uri, path, fName) {
+  console.log("into uploadImageWithName ", fName);
+  const img = await fetch(uri);
+  const bytesBlob = await img.blob();
+
+  const imageRef = ref(storage, `${path}/${fName}.jpeg`);
+
+  const snapshot = await uploadBytes(imageRef, bytesBlob, {
+    contentType: "image/jpeg",
+  });
+
+  const url = await getDownloadURL(snapshot.ref);
+
+  return { url, fName };
+}
+
 const palette = {
   // tealGreen: "#128c7e",
   tealGreen: "#047AFC",
