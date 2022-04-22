@@ -26,14 +26,15 @@ import {
   getDoc,
   serverTimestamp,
 } from "@firebase/firestore";
-import { auth, logout, updateProfile } from "./../firebase";
+import { auth, logout, updateProfile, db } from "./../firebase";
 
 const ProfileInfo = () => {
+  const navigation = useNavigation();
+
   const { currentUser } = auth;
   const { uid, photoURL, displayName, email } = currentUser;
-  const [avatar, setAvatar] = useState(photoURL);
 
-  const navigation = useNavigation();
+  const [avatar, setAvatar] = useState(photoURL);
 
   const updateProfileAuth = async (uri) => {
     //guardando photoURL en el auth de firebase
@@ -65,7 +66,7 @@ const ProfileInfo = () => {
       timestamp: serverTimestamp(),
     })
       .then(() => {
-        console.log("Perfil guardado en Storage");
+        console.log("Perfil guardado correctamente en Storage");
       })
       .catch((error) => {
         console.log(error.message);
@@ -86,6 +87,7 @@ const ProfileInfo = () => {
       //       { text: "Ok" },
       //     ]);
       //   }
+      setAvatar(result.uri);
       await sendImage(result.uri, currentUser?.email);
     } else {
       Alert.alert(
@@ -96,12 +98,15 @@ const ProfileInfo = () => {
     }
   }
 
+  // if (loading) {
+  //   return <Text>Loading...</Text>;
+  // }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       {/* Informacion de perfil */}
       <View style={styles.content}>
         <Avatar
-          // size={"large"}
           size={"large"}
           rounded
           containerStyle={styles.avatar}
@@ -110,7 +115,6 @@ const ProfileInfo = () => {
             avatar
               ? { uri: avatar }
               : require("../assets/img/avatar-default.jpg")
-            // require("../assets/img/user.png")
           }
         >
           <Avatar.Accessory size={25} onPress={handleOpenPicker} />
@@ -129,21 +133,6 @@ const ProfileInfo = () => {
         titleStyle={styles.btnTextStyle}
         onPress={() => console.log("first")}
       />
-
-      <View style={styles.panel}>
-        <View style={styles.containerButton}>
-          <TouchableOpacity
-            style={styles.panelButton}
-            onPress={() => {
-              navigation.navigate("UpdateProfile", {
-                currentUser,
-              });
-            }}
-          >
-            <Text style={styles.panelButtonTitle}>Editar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
     </SafeAreaView>
   );
 };
