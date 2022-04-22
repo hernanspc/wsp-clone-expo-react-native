@@ -9,52 +9,70 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+// import { Button } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import { pickImage, uploadImage, uploadImageWithName } from "../utils";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage, db, auth, updateProfile } from "../firebase";
+// import { getAuth } from "@firebase/auth";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  setDoc,
+  getDocs,
+  where,
+  getDoc,
+  serverTimestamp,
+} from "@firebase/firestore";
 
 const UpdateProfile = () => {
   const { params } = useRoute();
-  const { currUser } = params;
+  const { currentUser } = params;
+  const { uid, photoURL, displayName, email } = currentUser;
+  // console.log("currUser ", photoURL);
 
   const navigation = useNavigation();
   const [userData, setuserData] = useState(null);
   const [image, setImage] = useState(null);
+  // console.log("currUser ", currUser.photoURL);
+  const updateProfileAuth = async (uri) => {
+    //guardando photoURL en el auth de firebase
+    await updateProfile(auth.currentUser, {
+      photoURL: uri,
+    })
+      .then(() => {
+        console.log("Profile updated! ");
+      })
+      .catch((error) => {
+        console.log("An error occurred ", error.message);
+      });
+  };
 
-  console.log("currUser: ", currUser?.uid);
-
-  //   const uploadProfile = async (uri) => {
-  //     console.log("add file process ", "profiles/" + `profile-${user.uid}.jpg`);
-  //     const storageRef = ref(storage, "profiles/" + `profile-${user.uid}.jpg`);
-  //     //convert image to array of bytes
-  //     const img = await fetch(uri);
-  //     const bytes = await img.blob();
-
-  //     const res = await uploadBytes(storageRef, bytes);
-  //     return res;
-  //   };
-
-  async function sendImage(uri, userId) {
-    console.log("userId ", userId);
+  async function sendImage(uri, fileName) {
+    //guardando en storage y obteniendo url
     const { url, fName } = await uploadImageWithName(
       uri,
       `images/profiles/`,
-      userId
+      fileName
     );
-    console.log("log: ", url, fName);
-    //Ver si se puede mandar a user-Firebase photoURL // FIXME:
-    // const message = {
-    //   _id: fileName,
-    //   text: "",
-    //   createdAt: new Date(),
-    //   user: senderUser,
-    //   image: url,
-    // };
-    // const lastMessage = { ...message, text: "Image" };
-    // await Promise.all([
-    //   addDoc(roomMessagesRef, message),
-    //   updateDoc(roomRef, { lastMessage }),
-    // ]);
+
+    updateProfileAuth(url);
+    setDoc(doc(db, "users", currentUser?.uid), {
+      id: currentUser.uid,
+      displayName: currentUser.displayName,
+      photoURL: url,
+      email: currentUser.email,
+      timestamp: serverTimestamp(),
+    })
+      .then(() => {
+        console.log("Perfil guardado en Storage");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   async function handlePhotoPicker() {
@@ -66,13 +84,12 @@ const UpdateProfile = () => {
         aspect: [4, 3],
         quality: 1,
       });
-
       //   if (result.cancelled) {
       //     Alert.alert("Alerta!", " Has cerrado la selección de imagenes", [
       //       { text: "Ok" },
       //     ]);
       //   }
-      await sendImage(result.uri, currUser?.uid);
+      await sendImage(result.uri, currUser?.email);
     } else {
       Alert.alert(
         "Alerta!",
@@ -85,22 +102,15 @@ const UpdateProfile = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView
-        style={styles.container}
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        showsVerticalScrollIndicator={false}
+        // style={styles.container}
+        contentContainerStyle={
+          {
+            // justifyContent: "center",
+            // alignItems: "center",
+          }
+        }
+        // showsVerticalScrollIndicator={false}
       >
-        <Image
-          style={styles.userImg}
-          source={{
-            uri: userData
-              ? userData.userImg ||
-                "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-              : "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
-          }}
-        />
         <View style={styles.panel}>
           <TouchableOpacity
             style={styles.panelButton}
@@ -115,6 +125,12 @@ const UpdateProfile = () => {
             <Text style={styles.panelButtonTitle}>Cancelar</Text>
           </TouchableOpacity>
         </View>
+        <Button
+          title="Cerrar sesión"
+          buttonStyle={styles.btnStyles}
+          titleStyle={styles.btnTextStyle}
+          onPress={() => console.log("first")}
+        />
       </ScrollView>
     </SafeAreaView>
   );

@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { initializeFirestore } from "firebase/firestore";
@@ -33,3 +34,5 @@ export function signUp(email, password) {
 export function logout() {
   return signOut(auth);
 }
+
+export { updateProfile };

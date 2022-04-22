@@ -2,7 +2,8 @@ import * as ImagePicker from "expo-image-picker";
 import "react-native-get-random-values";
 import { nanoid } from "nanoid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "./firebase";
+import { storage, auth, logout } from "./firebase";
+
 export async function pickImage() {
   let permissionResult =
     await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -32,7 +33,6 @@ export async function uploadImage(uri, path, fName) {
 }
 
 export async function uploadImageWithName(uri, path, fName) {
-  console.log("into uploadImageWithName ", fName);
   const img = await fetch(uri);
   const bytesBlob = await img.blob();
 

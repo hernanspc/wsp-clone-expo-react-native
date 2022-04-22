@@ -18,6 +18,7 @@ export default function ListItem({
     theme: { colors },
   } = useContext(GlobalContext);
 
+  // console.log("list: ", user);
   return (
     <TouchableOpacity
       style={{ height: 80, ...style }}
