@@ -18,7 +18,7 @@ export default function ListItem({
     theme: { colors },
   } = useContext(GlobalContext);
 
-  // console.log("list: ", user);
+  console.log("ssssss: ", image);
   return (
     <TouchableOpacity
       style={{ height: 80, ...style }}
@@ -28,7 +28,11 @@ export default function ListItem({
         <Col
           style={{ width: 80, alignItems: "center", justifyContent: "center" }}
         >
-          <Avatar user={user} size={type === "contacts" ? 40 : 65} />
+          <Avatar
+            image={image}
+            user={user}
+            size={type === "contacts" ? 40 : 65}
+          />
         </Col>
         <Col style={{ marginLeft: 10 }}>
           <Row style={{ alignItems: "center" }}>

@@ -68,7 +68,7 @@ const ProfileInfo = () => {
       timestamp: serverTimestamp(),
     })
       .then(() => {
-        console.log("Perfil guardado correctamente en Storage");
+        console.log("Perfil guardado correctamente en Firebase Storage");
       })
       .catch((error) => {
         console.log(error.message);
