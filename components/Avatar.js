@@ -1,8 +1,7 @@
 import React from "react";
 import { Image } from "react-native";
 
-export default function Avatar({ size, user, image }) {
-  console.log("image ", image);
+export default function Avatar({ size, user }) {
   return (
     <Image
       style={{
@@ -10,7 +9,12 @@ export default function Avatar({ size, user, image }) {
         height: size,
         borderRadius: size,
       }}
-      source={image ? { uri: image } : require("../assets/icon-square.png")}
+      source={
+        // image ? { uri: image } : require("../assets/img/avatar-default.jpg")
+        user.photoURL
+          ? { uri: user.photoURL }
+          : require("../assets/img/avatar-default.jpg")
+      }
       resizeMode="cover"
     />
   );

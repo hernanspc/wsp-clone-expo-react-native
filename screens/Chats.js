@@ -8,7 +8,7 @@ import ListItem from "../components/ListItem";
 import useContacts from "../hooks/useHooks";
 export default function Chats() {
   const { currentUser } = auth;
-  // console.log("photoURL user: ", currentUser);
+  console.log("currentUser ", currentUser);
 
   const { rooms, setRooms, setUnfilteredRooms } = useContext(GlobalContext);
 
@@ -61,7 +61,7 @@ export default function Chats() {
     return user;
   }
 
-  // console.log("photosphotoURL: ", photos[0].photoURL);
+  console.log("usersphotoURL: ", photos);
   return (
     <View style={{ flex: 1, padding: 5, paddingRight: 10 }}>
       {rooms.map((room, key) => (
@@ -70,7 +70,7 @@ export default function Chats() {
           description={room.lastMessage.text}
           key={room.id}
           room={room}
-          image={photos[key]?.photoURL}
+          // image={photos[key]?.photoURL}
           time={room.lastMessage.createdAt}
           user={getUserB(room.userB, contacts)}
         />
