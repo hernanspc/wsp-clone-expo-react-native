@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyDLyw1Y0tcnigi6DD_rCmxY5m7Y-u6DInM",
-  authDomain: "expo-chat-ui.firebaseapp.com",
-  projectId: "expo-chat-ui",
-  storageBucket: "expo-chat-ui.appspot.com",
-  messagingSenderId: "196991531686",
-  appId: "1:196991531686:web:da55051567968dd587d267",
+  apiKey: "AIzaSyCkJDEzvqJYnfB6jlthBuYAweMqZCiCR3E",
+  authDomain: "chat-wsp.firebaseapp.com",
+  projectId: "chat-wsp",
+  storageBucket: "chat-wsp.appspot.com",
+  messagingSenderId: "318267623796",
+  appId: "1:318267623796:web:6679156de08bdc612a8421"
 };
 
 // Initialize Firebase
